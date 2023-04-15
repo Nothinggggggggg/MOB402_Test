@@ -1,0 +1,38 @@
+# EMPLOYEE
+### list 
+GET http://localhost:3000/employee/list
+
+### detail
+GET http://localhost:3000/employee/detail/643a553bb0af9635c4a3d4a2
+
+### create 
+POST http://localhost:3000/employee/create
+Content-Type: application/json
+
+{
+    "name":"z",
+    "avatar":"z.png",
+    "score":100
+}
+
+### update
+POST http://localhost:3000/employee/update/643a553bb0af9635c4a3d4a2
+Content-Type: application/json
+
+{
+    "name":"Manh Thai",
+    "avatar":"https://picsum.photos/500",
+    "score":100
+}
+
+### delete
+GET http://localhost:3000/employee/delete/643a5667baafc5a66d440f46
+
+
+### search by 'name'
+POST http://localhost:3000/employee/list_search
+Content-Type: application/json
+
+{
+    "name":""
+}

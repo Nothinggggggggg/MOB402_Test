@@ -1,0 +1,101 @@
+{{!-- Create Button + Input --}}
+<div class="row p-4 my-5">
+    <div class="col-auto">
+        <a class="btn btn-dark" href="/employee/create"><i class="fa-solid fa-user-plus"></i> Add </a>
+    </div>
+
+    <div class="col-auto ms-auto">
+        <form method="post" action="/employee/list_search">
+            <div class="input-group">
+                <span class="input-group-text">Input your search</span>
+                <input name="name" type="text" class="form-control" placeholder="Name">
+                <button class="btn btn-outline-secondary">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{!-- Table --}}
+<div class="row">
+    <table class="table table-striped table-borderless table-hover  table-response shadow">
+        <!-- Head -->
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>View</th>
+
+                <th>Name</th>
+                <th>Avatar</th>
+
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+        <!-- Body -->
+        <tbody>
+            {{#each employees}}
+            <tr>
+                <th class="align-middle">{{increase @index}}</th>
+                <td class="align-middle">
+                    <a class="btn" href="/employee/detail/{{this._id}}"><i class="fa-regular fa-eye"></i></a>
+                </td>
+
+                <td class="align-middle">{{this.name}}</td>
+                <td class="align-middle">
+                    <img src="{{this.avatar}}" width="48px" height="48px" alt="" class="rounded">
+                </td>
+
+                <td class="align-middle">
+                    <a class="btn" href="/employee/update/{{this._id}}"><i class="fa-regular fa-pen-to-square"></i></a>
+                </td>
+                <td class="align-middle">
+                    <button class="btn" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#my_model_{{this._id}}">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </td>
+                <!-- The Modal -->
+                <div class="modal" id="my_model_{{this._id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Delete</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                {{this.name}}
+                            </div>
+                            <!-- Modal footer -->
+                            <div class="modal-footer col-auto">
+                                <a type="button" class="btn btn-danger" href="/employee/delete/{{this._id}}">Yes</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+
+{{!-- Pagination --}}
+<div class="row align-items-center pb-5">
+    <div class="col-auto">
+        <p class="my-auto">{{count}} items</p>
+    </div>
+    {{!-- <div class="col-auto ms-auto">
+        <ul class="pagination justify-content-end my-auto">
+            <li class="page-item"><a class="page-link disabled" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">...</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </div> --}}
+</div>
