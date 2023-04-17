@@ -1,7 +1,7 @@
 <div class="row w-50 p-5 mx-auto shadow">
-    <form action="{{action}}" method="post">
+    <form action="{{action}}" method="post" enctype="multipart/form-data">
         <div class="row mb-3">
-            <a class="btn btn-dark col-auto me-auto" href="/employee/list"><i class="fa-solid fa-arrow-left"></i>
+            <a class="btn btn-dark col-auto me-auto" href="/employees/list"><i class="fa-solid fa-arrow-left"></i>
                 Back</a>
             <code class="mx-auto col-auto">{{notify}}</code>
             <button class="btn btn-primary col-auto ms-auto">{{task}}</button>
@@ -12,13 +12,19 @@
                 <label class="form-label">Name</label>
                 <input name="name" type="text" class="form-control" value="{{employee.name}}" required>
             </div>
-            <div class="mb-3">
+            {{!-- <div class="mb-3">
                 <label class="form-label">Avatar</label>
                 <input name="avatar" type="text" class="form-control" value="{{employee.avatar}}" required>
+            </div> --}}
+            <div class="mb-3">
+                <label class="form-label">Avatar</label>
+                <input name="avatar" type="file" class="form-control" accept="image/*" {{#if (equal task 'Create' )}}
+                    required {{/if}}>
             </div>
             <div class="mb-3">
                 <label class="form-label">Score</label>
-                <input name="score" type="number" class="form-control" rows="3" step="1" min="0" value="{{employee.score}}" required>
+                <input name="score" type="number" class="form-control" rows="3" step="1" min="0"
+                    value="{{employee.score}}" required>
                 {{!-- <div class="form-text text-end">Option</div> --}}
             </div>
         </div>

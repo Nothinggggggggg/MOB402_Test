@@ -1,11 +1,11 @@
 {{!-- Create Button + Input --}}
 <div class="row p-4 my-5">
     <div class="col-auto">
-        <a class="btn btn-dark" href="/employee/create"><i class="fa-solid fa-user-plus"></i> Add </a>
+        <a class="btn btn-dark" href="/employees/create"><i class="fa-solid fa-user-plus"></i> Add </a>
     </div>
 
     <div class="col-auto ms-auto">
-        <form method="post" action="/employee/list_search">
+        <form method="post" action="/employees/list_search">
             <div class="input-group">
                 <span class="input-group-text">Input your search</span>
                 <input name="name" type="text" class="form-control" placeholder="Name">
@@ -38,16 +38,16 @@
             <tr>
                 <th class="align-middle">{{increase @index}}</th>
                 <td class="align-middle">
-                    <a class="btn" href="/employee/detail/{{this._id}}"><i class="fa-regular fa-eye"></i></a>
+                    <a class="btn" href="/employees/detail/{{this._id}}"><i class="fa-regular fa-eye"></i></a>
                 </td>
 
                 <td class="align-middle">{{this.name}}</td>
                 <td class="align-middle">
-                    <img src="{{this.avatar}}" width="48px" height="48px" alt="" class="rounded">
+                    <img src="/uploads/{{this.avatar}}" width="48px" height="48px" alt="avatar" class="rounded">
                 </td>
 
                 <td class="align-middle">
-                    <a class="btn" href="/employee/update/{{this._id}}"><i class="fa-regular fa-pen-to-square"></i></a>
+                    <a class="btn" href="/employees/update/{{this._id}}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 <td class="align-middle">
                     <button class="btn" type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -70,7 +70,7 @@
                             </div>
                             <!-- Modal footer -->
                             <div class="modal-footer col-auto">
-                                <a type="button" class="btn btn-danger" href="/employee/delete/{{this._id}}">Yes</a>
+                                <a type="button" class="btn btn-danger" href="/employees/delete/{{this._id}}">Yes</a>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                             </div>
                         </div>

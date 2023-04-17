@@ -1,121 +1,163 @@
 const express = require("express");
+const multer = require("multer");
 
 const Employee = require("../models/employee.model");
+const { uploadOne } = require("../upload_file");
 
 const router = express.Router();
 
-// #READ
+/////////////////////////////////////////////////// #READ
+// #List
 router.get("/list", async (req, res, next) => {
   try {
     // get list employees
     const employees = await Employee.find().lean().exec();
 
     // render
-    // res.send(JSON.stringify(employees));
-    res.render("home", {
+    return res.render("home", {
       pageTitle: "Home",
       employees,
       count: employees.length,
     });
   } catch (error) {
-    res.send(JSON.stringify(error));
+    res.status(500).json({ error: error.message });
   }
 });
+// #Item
 router.get("/detail/:_id", async (req, res, next) => {
   try {
     // find by id
     const employee = await Employee.findById(req.params._id).lean().exec();
 
     // render
-    // res.send(JSON.stringify(employee));
-    res.render("detail", {
+    return res.render("detail", {
       pageTitle: "Detail",
       employee,
     });
   } catch (error) {
-    res.send(JSON.stringify(error));
+    res.status(500).json({ error: error.message });
   }
 });
 
-// #CREATE
+/////////////////////////////////////////////////////// #CREATE
 router.get("/create", (req, res, next) => {
   res.render("form", {
     pageTitle: "Create",
-    action: "/employee/create",
+    action: "/employees/create",
     task: "Create",
   });
 });
-router.post("/create", async (req, res, next) => {
+router.post("/create", (req, res, next) => {
   try {
-    // get data
-    const { name, avatar, score } = req.body;
+    // handle upload image
+    uploadOne(req, res, async (error) => {
+      if (error) {
+        return res.render("form", {
+          pageTitle: "Create",
+          action: "/employees/create",
+          task: "Create",
+          notify: `fail: ${error.message}`,
+        });
+      } else {
+        // handle create
+        // _get data
+        const { name, score } = req.body;
+        const avatar = req.file.originalname;
 
-    // create employee
-    const employee = new Employee({
-      name,
-      avatar,
-      score,
+        // _create employee
+        const employee = new Employee({
+          name,
+          avatar,
+          score,
+        });
+
+        await employee.save();
+
+        // _back to /list
+        return res.redirect("/employees/list");
+      }
     });
-
-    await employee.save();
-
-    // back to /list
-    res.redirect("/employee/list");
   } catch (error) {
-    res.send(JSON.stringify(error));
+    res.status(500).json({ error: error.message });
   }
 });
 
-// #UPDATE
+//////////////////////////////////////////////////// #UPDATE
 router.get("/update/:_id", async (req, res, next) => {
   try {
     // find by id
     const employee = await Employee.findById(req.params._id).lean().exec();
 
     // render
-    res.render("form", {
+    return res.render("form", {
       pageTitle: "Update",
-      action: "/employee/update/" + req.params._id,
+      action: "/employees/update/" + req.params._id,
       task: "Update",
-      employee
+      employee,
     });
   } catch (error) {
-    res.send(JSON.stringify(error));
+    res.status(500).json({ error: error.message });
   }
 });
-router.post("/update/:_id", async (req, res, next) => {
+router.post("/update/:_id", (req, res, next) => {
   try {
-    // get data
-    const { name, avatar, score } = req.body;
+    // handle upload image
+    uploadOne(req, res, async (error) => {
+      if (error) {
+        // find by id
+        const employee = await Employee.findById(req.params._id).lean().exec();
 
-    // update by id
-    const employee = await Employee.findByIdAndUpdate(req.params._id, {
-      name,
-      avatar,
-      score,
+        // render
+        return res.render("form", {
+          pageTitle: "Update",
+          action: "/employees/update/" + req.params._id,
+          task: "Update",
+          employee,
+          notify: error.message,
+        });
+      } else {
+        // handle update
+        // _get data
+        const { name, score } = req.body;
+
+        // _update by id
+        if (req.file) {
+          const avatar = req.file.originalname;
+          const employee = await Employee.findByIdAndUpdate(req.params._id, {
+            name,
+            avatar,
+            score,
+          });
+        } else {
+          const employee = await Employee.findByIdAndUpdate(req.params._id, {
+            name,
+            score,
+          });
+        }
+
+        // _back to /list
+        return res.redirect("/employees/list");
+      }
     });
-
-    // back to /list
-    res.redirect("/employee/list");
   } catch (error) {
-    res.send(JSON.stringify(error));
+    res.status(500).json({ error: error.message });
   }
 });
 
-// #DELETE
+////////////////////////////////////////////////// #DELETE
 router.get("/delete/:_id", async (req, res, next) => {
   try {
     // delete by id
     const employee = await Employee.findByIdAndDelete(req.params._id);
 
     // back to /list
-    res.redirect("/employee/list");
+    return res.redirect("/employees/list");
   } catch (error) {
-    res.send(JSON.stringify(error));
+    res.status(500).json({ error: error.message });
   }
 });
 
-// #QUERY
+//////////////////////////////////////////////// #QUERY
 // #Search by 'name'
 router.post("/list_search", async (req, res, next) => {
   try {
@@ -123,8 +165,8 @@ router.post("/list_search", async (req, res, next) => {
     const { name } = req.body;
 
     // check input empty > back to /list
-    if(!name){
-        return res.redirect('/employee/list')
+    if (!name) {
+      return res.redirect("/employees/list");
     }
 
     // search
@@ -133,17 +175,18 @@ router.post("/list_search", async (req, res, next) => {
         $regex: name,
         $options: "i",
       },
-    }).lean().exec();
+    })
+      .lean()
+      .exec();
 
     // render
-    // res.send(JSON.stringify(employees));
-    res.render("home", {
+    return res.render("home", {
       pageTitle: "Search",
       employees,
       count: employees.length,
     });
   } catch (error) {
-    res.send(JSON.stringify(error));
+    res.status(500).json({ error: error.message });
   }
 });
 
