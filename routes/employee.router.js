@@ -12,7 +12,7 @@ router.get("/list", async (req, res, next) => {
   try {
     // get list employees
     const employees = await Employee.find().lean().exec();
-
+    
     // render
     return res.render("home", {
       pageTitle: "Home",
@@ -182,6 +182,25 @@ router.post("/list_search", async (req, res, next) => {
     // render
     return res.render("home", {
       pageTitle: "Search",
+      employees,
+      count: employees.length,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// #Sort by Name
+router.get("/list/:field/:sort", async (req, res, next) => {
+  try {
+    console.log(`req.params ___${JSON.stringify(req.params)}`)
+    const {field,sort} = req.params;
+
+    // get list employees
+    const employees = await Employee.find().sort({ [field]: sort }).lean().exec();
+
+    // render
+    return res.render("home", {
+      pageTitle: "Home",
       employees,
       count: employees.length,
     });

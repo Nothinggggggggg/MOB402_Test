@@ -24,7 +24,18 @@
                 <th>#</th>
                 <th>View</th>
 
-                <th>Name</th>
+                {{!-- <th>Name</th> --}}
+                <th>
+                    <div class="dropdown dropdown-toggle" data-bs-toggle="dropdown">
+                        Name
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/employees/list">None</a></li>
+                        <li><a class="dropdown-item" href="/employees/list/name/asc">Ascending</a></li>
+                        <li><a class="dropdown-item" href="/employees/list/name/desc">Descending</a></li>
+                    </ul>
+                </th>
+
                 <th>Avatar</th>
 
                 <th>Update</th>
